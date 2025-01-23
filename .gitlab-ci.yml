@@ -1,0 +1,23 @@
+stages:
+  - build
+  - publish
+
+build:
+  stage: build
+  image: maven:3.8.4-jdk-11
+  script:
+    - cd generated
+    - ./mvnw clean package
+  artifacts:
+    paths:
+      - generated/target/*.jar
+
+publish:
+  stage: publish
+  image: maven:3.8.4-jdk-11
+  script:
+    - mvn deploy -DskipTests
+  dependencies:
+    - build
+  only:
+    - main
